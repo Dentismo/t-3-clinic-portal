@@ -85,3 +85,5 @@ const clinicSchema = new mongoose.Schema({
         }
     }
 });
+
+module.exports = mongoose.model('Clinic', clinicSchema)
