@@ -1,4 +1,8 @@
 const mqtt = require('mqtt');
+const ClinicPortalController = require('./clinicPortalController')
+//const dentist = require('./clinicPortalController')
+
+const clinic = new ClinicPortalController();
 
 class MqttHandler {
   constructor() {
@@ -6,6 +10,8 @@ class MqttHandler {
     this.host = 'http://localhost:1883';
     this.username = 'YOUR_USER'; // mqtt credentials if these are needed to connect
     this.password = 'YOUR_PASSWORD';
+    this.reqestDentistTopic = 'clinicPortal/dentist/request';
+    this.responseDentistTopic = 'clinicPortal/dentist/response';
   }
 
   connect() {
@@ -20,23 +26,21 @@ class MqttHandler {
 
     // Connection callback
     this.mqttClient.on('connect', () => {
-      console.log(`mqtt client connected`);
+      console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
+      this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
     });
 
-    // mqtt subscriptions
-    this.mqttClient.subscribe('mytopic', {qos: 0});
+    const client = this.mqttClient;
+    let responseD = 'clinicPortal/dentist/response'
 
     // When a message arrives, console.log it
-    this.mqttClient.on('message', function (topic, message) {
-      console.log(message.toString());
+    this.mqttClient.on('message', async function (topic, message) {
+      const response = await clinic.dentist(message);
+      client.publish(responseD, response);
+      console.log(response);
     });
   }
 
-  // Sends a mqtt message to topic: mytopic
-  sendMessage(message) {
-    this.mqttClient.publish('mytopic', message);
-  }
 }
-
 
 module.exports = MqttHandler;

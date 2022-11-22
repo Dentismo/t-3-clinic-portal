@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const path = require('path');
 const cors = require('cors');
 const history = require('connect-history-api-fallback');
+const dentist = require('./controller/clinicPortalController');
+
 
 
 var bodyParser = require("body-parser");
@@ -54,6 +56,7 @@ function setupApp() {
     app.use(morgan('dev'));
     app.options('*', cors());
     app.use(cors());
+    app.use('/api/dentists', dentist);
     return app;
 }
 
