@@ -3,16 +3,16 @@ const {dentistSchema} = require('./dentist');
 
 
 const clinicSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
     dentists: {
         type: Number
     },
-    issuance: {
-        type: String, 
-        unique: true
-    },
-    date: {
-        type: Date,
-        default: Date.now()
+    owner: {
+        type: String,
+        required: true
     },
     address: {
         type: String,
