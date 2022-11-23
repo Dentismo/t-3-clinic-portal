@@ -1,6 +1,6 @@
 const {Dentist} = require('../model/dentist');
-const Booking = require('../model/booking');
-const Clinic = require('../model/clinic');
+const {Booking} = require('../model/booking');
+const {Clinic} = require('../model/clinic');
 const mongoose = require('mongoose');
 
 class ClinicPortalController {
@@ -8,29 +8,30 @@ class ClinicPortalController {
     constructor() {}
 
     async dentist(id) {
-        //const dentist = await Dentist.findById(id);
-        const dentist = await Dentist.findOne({ _id: id });
+        try {
+            if (!mongoose.Types.ObjectId.isValid(id)) 
+                return '{message: "ID is not valid for given request"}';
 
-        if (!dentist)
+            const dentist = await Dentist.findById(id);  
+
+            if (!dentist)
+                return '{message: "Dentist could not be found with given ID"}';
+
+            return JSON.stringify(dentist);
+
+        } catch (error) {
+            console.log(error)
             return '{message: "Dentist could not be found with given ID"}';
-
-        return JSON.stringify(dentist);
+        }
+        
     }
 
-    //async bookingRequest() {}
+    //async bookingRequests(dentist_id) {}
 
-    //async clinic() {}
+    // async clinic() {
+    //     const clinics = await Clinic.find({});
+    //     return JSON.stringify(clinics);
+    // }
 }
 
 module.exports = ClinicPortalController
-
-// const dentist = async (id) => {
-//     const dentist = await Dentist.findById(id);
-
-//     if (!dentist)
-//         return '{message: "Dentist could not be found with given ID"}';
-
-//    return dentist;     
-// }
-
-// module.exports = dentist;

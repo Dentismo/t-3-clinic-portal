@@ -35,7 +35,7 @@ class MqttHandler {
 
     // When a message arrives, console.log it
     this.mqttClient.on('message', async function (topic, message) {
-      const response = await clinic.dentist(message);
+      const response = await clinic.dentist(message.toString());
       client.publish(responseD, response);
       console.log(response);
     });
