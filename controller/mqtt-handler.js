@@ -15,6 +15,8 @@ class MqttHandler {
     this.responseClinicTopic = 'clinicPortal/clinic/response';
     this.reqestClinicsTopic = 'clinicPortal/clinics/request';
     this.responseClinicsTopic = 'clinicPortal/clinics/response';
+    this.reqestBookingRequestsTopic = 'clinicPortal/bookingRequests/request';
+    this.responseBookingRequestsTopic = 'clinicPortal/bookingRequests/response';
 
   }
 
@@ -30,11 +32,11 @@ class MqttHandler {
 
     // Connection callback
     this.mqttClient.on('connect', () => {
-      //console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
       console.log(`mqtt client connected, Subscribed to ${this.reqestClinicsTopic}`);
       //this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
       //this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
-      this.mqttClient.subscribe(this.reqestClinicsTopic, {qos: 1});
+      //this.mqttClient.subscribe(this.reqestClinicsTopic, {qos: 1});
+      this.mqttClient.subscribe(this.reqestBookingRequestsTopic, {qos: 1});
 
     });
 
@@ -43,7 +45,7 @@ class MqttHandler {
     this.mqttClient.on('message', async function (topic, message) {
       switch (topic) {
         case 'clinicPortal/dentist/request':
-          const responseDentist = await clinic.dentist(message.toString());
+          const responseDentist = await clinic.getDentist(message.toString());
           client.publish('clinicPortal/dentist/response', responseDentist);
           console.log(responseDentist);
           break;
@@ -58,6 +60,12 @@ class MqttHandler {
           const responseClinics = await clinic.getClinics();
           client.publish('clinicPortal/clinics/response', responseClinics);
           console.log(responseClinics);
+          break;
+
+        case 'clinicPortal/bookingRequests/request':
+          const responseBookings = await clinic.getBookings(message.toString());
+          client.publish('clinicPortal/bookingRequests/response', responseBookings);
+          console.log(responseBookings);
           break;  
       }
     });

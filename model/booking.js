@@ -22,8 +22,22 @@ const bookingRequestSchema = new mongoose.Schema({
         unique: true
     },
     date: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        required: true
+    },
+    state: {
+        type: String,
+        required: true,
+        default: 'pending',
+        enum: ['approved', 'pending', 'denied']
+    },
+    start: {
+        type: String,
+        required: true
+    },
+    end: {
+        type: String,
+        required: true
     }
 });
 
