@@ -1,6 +1,5 @@
 const mqtt = require('mqtt');
 const ClinicPortalController = require('./clinicPortalController')
-//const dentist = require('./clinicPortalController')
 
 const clinic = new ClinicPortalController();
 
@@ -12,6 +11,9 @@ class MqttHandler {
     this.password = 'YOUR_PASSWORD';
     this.reqestDentistTopic = 'clinicPortal/dentist/request';
     this.responseDentistTopic = 'clinicPortal/dentist/response';
+    this.reqestClinicTopic = 'clinicPortal/clinic/request';
+    this.responseClinicTopic = 'clinicPortal/clinic/response';
+
   }
 
   connect() {
@@ -26,18 +28,28 @@ class MqttHandler {
 
     // Connection callback
     this.mqttClient.on('connect', () => {
-      console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
-      this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
+      //console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
+      console.log(`mqtt client connected, Subscribed to ${this.reqestClinicsTopic}`);
+      //this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
+      this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
     });
 
     const client = this.mqttClient;
-    let responseD = 'clinicPortal/dentist/response'
-
     // When a message arrives, console.log it
     this.mqttClient.on('message', async function (topic, message) {
-      const response = await clinic.dentist(message.toString());
-      client.publish(responseD, response);
-      console.log(response);
+      switch (topic) {
+        case 'clinicPortal/dentist/request':
+          const responseDentist = await clinic.dentist(message.toString());
+          client.publish('clinicPortal/dentist/response', responseDentist);
+          console.log(responseDentist);
+          break;
+        
+        case 'clinicPortal/clinic/request':
+          const responseClinic = await clinic.getClinic(message.toString());
+          client.publish('clinicPortal/clinic/response', responseClinic);
+          console.log(responseClinic);
+          break;
+      }
     });
   }
 

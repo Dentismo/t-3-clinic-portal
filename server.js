@@ -56,7 +56,6 @@ function setupApp() {
     app.use(morgan('dev'));
     app.options('*', cors());
     app.use(cors());
-    app.use('/api/dentists', dentist);
     return app;
 }
 
