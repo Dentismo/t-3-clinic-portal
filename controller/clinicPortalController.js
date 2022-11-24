@@ -7,6 +7,7 @@ class ClinicPortalController {
 
     constructor() {}
 
+    // Returns the specific dentist
     async getDentist(id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
@@ -26,6 +27,7 @@ class ClinicPortalController {
         
     }
 
+    // Returns the list of bookings for the specific clinic
     async getBookings(clinic_id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null) 
@@ -44,6 +46,7 @@ class ClinicPortalController {
         }
     }
 
+    // Returns the specific clinic's information
     async getClinic(id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
@@ -62,6 +65,7 @@ class ClinicPortalController {
         }
     }
 
+    // Returns the list of all clinics
     async getClinics() {
         try {
             const clinics = await Clinic.find({}); 
