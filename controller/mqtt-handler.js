@@ -13,6 +13,8 @@ class MqttHandler {
     this.responseDentistTopic = 'clinicPortal/dentist/response';
     this.reqestClinicTopic = 'clinicPortal/clinic/request';
     this.responseClinicTopic = 'clinicPortal/clinic/response';
+    this.reqestClinicsTopic = 'clinicPortal/clinics/request';
+    this.responseClinicsTopic = 'clinicPortal/clinics/response';
 
   }
 
@@ -31,7 +33,9 @@ class MqttHandler {
       //console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
       console.log(`mqtt client connected, Subscribed to ${this.reqestClinicsTopic}`);
       //this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
-      this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
+      //this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
+      this.mqttClient.subscribe(this.reqestClinicsTopic, {qos: 1});
+
     });
 
     const client = this.mqttClient;
@@ -49,6 +53,12 @@ class MqttHandler {
           client.publish('clinicPortal/clinic/response', responseClinic);
           console.log(responseClinic);
           break;
+
+        case 'clinicPortal/clinics/request':
+          const responseClinics = await clinic.getClinics();
+          client.publish('clinicPortal/clinics/response', responseClinics);
+          console.log(responseClinics);
+          break;  
       }
     });
   }

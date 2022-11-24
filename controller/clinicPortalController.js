@@ -45,6 +45,21 @@ class ClinicPortalController {
             return '{message: "Clinic could not be found with given ID"}';
         }
     }
+
+    async getClinics() {
+        try {
+            const clinics = await Clinic.find({}); 
+
+            if (!clinics)
+                return '{message: "No clinics was found!"}';
+
+            return JSON.stringify(clinics);
+
+        } catch (error) {
+            console.log(error)
+            return '{message: "Clinics could not be found"}';
+        }
+    }
 }
 
 module.exports = ClinicPortalController
