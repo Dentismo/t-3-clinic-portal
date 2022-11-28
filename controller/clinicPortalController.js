@@ -50,7 +50,7 @@ class ClinicPortalController {
     async getClinic(id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
-                return '{message: "Clinic is not valid for given request"}';
+                return '{message: "ID is not valid for given request"}';
 
             const clinics = await Clinic.findById(id); 
 
@@ -71,7 +71,7 @@ class ClinicPortalController {
             const clinics = await Clinic.find({}); 
 
             if (!clinics)
-                return '{message: "No clinics is found!"}';
+                return '{message: "Clinics were not found!"}';
 
             return JSON.stringify(clinics);
 
