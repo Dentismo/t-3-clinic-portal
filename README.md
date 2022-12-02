@@ -1,92 +1,227 @@
-# Clinic Portal
-
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.chalmers.se/courses/dit355/dit356-2022/t-3/clinic-portal.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://git.chalmers.se/courses/dit355/dit356-2022/t-3/clinic-portal/-/settings/integrations)
-
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
+# Clinic Portal Component for the Dentismo Web Application
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+This component is necessary to retrieve the clinic, list of clinics, and information about the dentist from the database. Authentication component receives user credentials via the MQTT Protocol and verifies them using the database. Clinic portal component returns the dentist information that has been stored in the database upon successful authentication. When a user clicks on a specific clinic, information about that clinic is displayed that was returned from the database with the aid of the clinic portal. Clinic portal also returns a list of clinics from the database that is viewable from the UI.
 
-## Badges
+## Badges - TODO
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
 
 ## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### Sequence Diagram
+This sequence diagram illustrates a use case where a user tries to find information on a dentist account, a clinic, and a list of clinics.
+![sequence-diagram.png](./Sequence-diagram.png)
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+1. Clone Repository
+2. Via the terminal navigate to the cloned repository
+3. Run `npm i` to download all required packages for running the app
+4. Run `npm start` to run the component
+5. Open the Client Dentismo website, you will see a list of clinics. If you click on one of them, you will see information for that clinic. If you log in using the proper credentials, you will have all the information you need in your account.
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Receiving a request from the user, confirming it via the system's backend to ensure that the ID is present in the database, and sending the user the information are the main tasks of this component. A individual dentist, a clinic, or a list of clinics are all examples of information. Here's an illustration of what can be delivered to the component:
+```
+{
+    clinic_id: 637e0dbf0e5ac0363e1317ca
+}
+```
+In this case, when you move on to the individual clinic page, it sends back the pertinent data required to retrieve the appropriate clinic. Although these details are saved to the database, they are displayed to the user in the frontend.
 
+```
+{
+   "coordinate":{
+      "longitude":11.942625,
+      "latitude":57.685255
+   },
+   "openinghours":{
+      "monday":{
+         "start":8,
+         "finish":16
+      },
+      "tuesday":{
+         "start":10,
+         "finish":15
+      },
+      "wednesday":{
+         "start":12,
+         "finish":18
+      },
+      "thursday":{
+         "start":7,
+         "finish":14
+      },
+      "friday":{
+         "start":11,
+         "finish":16
+      }
+   },
+   "_id":"637e0dbf0e5ac0363e1317ca",
+   "name":"Tooth Fairy Dentist",
+   "dentists":1,
+   "owner":"Tooth Fairy",
+   "address":"Slottskogen",
+   "city":"Gothenburg"
+}
+```
+
+Or in the case that the information do not exist in the database
+
+```
+{
+    message: "Clinic could not be found with given ID"
+}
+```
+
+The user wants to retrieve (his/her) information in this situation.
+
+```
+{
+    dentist_id: 637e0dbf0e5ac0363e1317ca
+}
+```
+
+In this case, it gives back the pertinent information when you proceed to the dentist page after logging in. The user sees these details in the frontend.
+
+```
+{
+   "_id":"6379385a4aad2aefb4d4a692",
+   "name":"Hannibal Lecter",
+   "username":"Dr.Lecter",
+   "password":"loveMeat",
+   "email":"lecter1@gmail.com",
+}
+```
+
+Or in the case that the information do not exist in the database
+
+```
+{
+    message: "Dentist could not be found with given ID"
+}
+```
+
+Here, we want to obtain a list of clinics along with their information. There is no requirement in this case
+
+```
+[
+   {
+      "coordinate":{
+         "longitude":11.942625,
+         "latitude":57.685255
+      },
+      "openinghours":{
+         "monday":{
+            "start":8,
+            "finish":16
+         },
+         "tuesday":{
+            "start":10,
+            "finish":15
+         },
+         "wednesday":{
+            "start":12,
+            "finish":18
+         },
+         "thursday":{
+            "start":7,
+            "finish":14
+         },
+         "friday":{
+            "start":11,
+            "finish":16
+         }
+      },
+      "_id":"637e0dbf0e5ac0363e1317ca",
+      "name":"Tooth Fairy Dentist",
+      "dentists":1,
+      "owner":"Tooth Fairy",
+      "address":"Slottskogen",
+      "city":"Gothenburg",
+      "__v":0
+   },
+   {
+      "coordinate":{
+         "longitude":11.969388,
+         "latitude":57.707619
+      },
+      "openinghours":{
+         "monday":{
+            "start":9,
+            "finish":17
+         },
+         "tuesday":{
+            "start":8,
+            "finish":17
+         },
+         "wednesday":{
+            "start":7,
+            "finish":16
+         },
+         "thursday":{
+            "start":9,
+            "finish":17
+         },
+         "friday":{
+            "start":9,
+            "finish":15
+         }
+      },
+      "_id":"637e0e730e5ac0363e1317cc",
+      "name":"Dan Tist",
+      "dentists":3,
+      "owner":"Your dentist",
+      "address":"Spannmålsgatan 20",
+      "city":"Gothenburg",
+      "__v":0
+   },
+   {
+      "coordinate":{
+         "longitude":11.969388,
+         "latitude":57.707619
+      },
+      "_id":"63800c226be1f9736a000e95",
+      "name":"Johnny",
+      "dentists":3,
+      "owner":"John Webb",
+      "address":"avenue 20",
+      "city":"Gothenburg",
+      "__v":0
+   }
+]
+```
+
+Or in the case that the information do not exist in the database
+
+```
+{
+    message:  "Clinics could not be found"
+}
+```
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Developer of the component: [@bardiaf](https://git.chalmers.se/bardiaf) <br>
+email: bardia.forooraghi@gmail.com
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+No established roadmap is in place at this time.
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+I welcome contributions, but they must be sought via a merge request and followed up with an email outlining why.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- What is fixed by this?
+- Why it's advantageous to the component?
+- If the person is prepared to support these fixes and improvements going forward
 
 ## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The contributors to the Availability Checker Component include: <br>
 
-## License
+**Bardia Forooraghi** - [@bardiaf](https://git.chalmers.se/bardiaf) <br>
+- Lead Developer for the Component
+
+**Georg Zsolnai** - [@zsolnai](https://git.chalmers.se/zsolnai) <br>
+- Added CI/CD
+
+## License - TODO
 For open source projects, say how it is licensed.
 
 ## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Clinic Portal has been finished. As a result, this repository won't be receiving any new changes for the time being. The additional elements of the larger Dentismo distributed system have been finished. We will develop tests to ensure everything is operating as expected as well as linking the backend to the frontend over the course of the upcoming few weeks. By December 16th, 2022, we hope to have completed the larger Dentismo project.

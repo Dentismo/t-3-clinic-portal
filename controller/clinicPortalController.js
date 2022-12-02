@@ -11,18 +11,18 @@ class ClinicPortalController {
     async getDentist(id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
-                return '{message: "ID is not valid for given request"}';
+                return {message: 'ID is not valid for given request'};
 
             const dentist = await Dentist.findById(id);  
 
             if (!dentist)
-                return '{message: "Dentist could not be found with given ID"}';
+                return {message: 'Dentist could not be found with given ID'};
 
             return JSON.stringify(dentist);
 
         } catch (error) {
             console.log(error)
-            return '{message: "Dentist could not be found with given ID"}';
+            return {message: 'Dentist could not be found with given ID'};
         }
         
     }
@@ -31,18 +31,18 @@ class ClinicPortalController {
     async getBookings(clinic_id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null) 
-                return '{message: "ID is not valid for given request"}';
+                return {message: 'ID is not valid for given request'};
 
             const dentistsBookings = await Booking.find({clinicId: clinic_id});
             
             if (!dentistsBookings)
-                return '{message: "Bookings could not be found"}';
+                return {message: 'Bookings could not be found'};
 
             return dentistsBookings.toString();    
 
         } catch (error) {
             console.log(error);
-            return '{message: "Bookings could not be found"}';
+            return {message: 'Bookings could not be found'};
         }
     }
 
@@ -50,18 +50,18 @@ class ClinicPortalController {
     async getClinic(id) {
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
-                return '{message: "ID is not valid for given request"}';
+                return {message: 'ID is not valid for given request'};
 
             const clinics = await Clinic.findById(id); 
 
             if (!clinics)
-                return '{message: "Clinic could not be found with given ID"}';
+                return {message: 'Clinic could not be found with given ID'};
 
             return JSON.stringify(clinics);
 
         } catch (error) {
             console.log(error)
-            return '{message: "Clinic could not be found with given ID"}';
+            return {message: 'Clinic could not be found with given ID'};
         }
     }
 
@@ -71,13 +71,13 @@ class ClinicPortalController {
             const clinics = await Clinic.find({}); 
 
             if (!clinics)
-                return '{message: "Clinics were not found!"}';
+                return {message: 'Clinics were not found!'};
 
             return JSON.stringify(clinics);
 
         } catch (error) {
             console.log(error)
-            return '{message: "Clinics could not be found"}';
+            return {message: 'Clinics could not be found'};
         }
     }
 }
