@@ -43,9 +43,9 @@ class MqttHandler {
 
        //-------------------------------------------------------------------\\
       let incomingTopic = topic.split('/') // array of topic fields
-      id = s[3]  //   [request, creatBooking, id]
-      incomingTopic = s.splice(3,1) // removes id = [request, createBooking]
-      const finalTopic = s.join('/') // finalTopic = request/creatBooking 
+      id = s[3]  //   [request, clinicportal, clinic, id]
+      incomingTopic = s.splice(3,1) // removes id = [request, clinicportal, clinic]
+      const finalTopic = s.join('/') // finalTopic = request/clinicportal/clinic 
        //--------------------------------------------------------------------\\
 
       switch (finalTopic) {
