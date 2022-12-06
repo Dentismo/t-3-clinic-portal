@@ -35,12 +35,9 @@ class MqttHandler {
       console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
       console.log(`mqtt client connected, Subscribed to ${this.reqestClinicTopic}`);
       console.log(`mqtt client connected, Subscribed to ${this.reqestClinicsTopic}`);
-      console.log(`mqtt client connected, Subscribed to ${this.reqestBookingRequestsTopic}`);
       this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
       this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
       this.mqttClient.subscribe(this.reqestClinicsTopic, {qos: 1});
-      this.mqttClient.subscribe(this.reqestBookingRequestsTopic, {qos: 1});
-
     });
 
     const client = this.mqttClient;
@@ -64,12 +61,6 @@ class MqttHandler {
           client.publish('clinicPortal/clinics/response', responseClinics);
           console.log(responseClinics);
           break;
-
-        case 'clinicPortal/bookingRequests/request':
-          const responseBookings = await clinic.getBookings(message.toString());
-          client.publish('clinicPortal/bookingRequests/response', responseBookings);
-          console.log(responseBookings);
-          break;  
       }
     });
   }
