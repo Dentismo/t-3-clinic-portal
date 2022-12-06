@@ -9,15 +9,12 @@ class MqttHandler {
     this.host = 'http://localhost:1883';
     this.username = 'YOUR_USER'; // mqtt credentials if these are needed to connect
     this.password = 'YOUR_PASSWORD';
-    this.reqestDentistTopic = 'clinicPortal/dentist/request';
-    this.responseDentistTopic = 'clinicPortal/dentist/response';
-    this.reqestClinicTopic = 'clinicPortal/clinic/request';
-    this.responseClinicTopic = 'clinicPortal/clinic/response';
-    this.reqestClinicsTopic = 'clinicPortal/clinics/request';
-    this.responseClinicsTopic = 'clinicPortal/clinics/response';
-    this.reqestBookingRequestsTopic = 'clinicPortal/bookingRequests/request';
-    this.responseBookingRequestsTopic = 'clinicPortal/bookingRequests/response';
-
+    this.reqestDentistTopic = 'request/clinicPortal/dentist/*';
+    this.responseDentistTopic = 'response/clinicPortal/dentist/*';
+    this.reqestClinicTopic = 'request/clinicPortal/clinic/*';
+    this.responseClinicTopic = 'response/clinicPortal/clinic/*';
+    this.reqestClinicsTopic = 'request/clinicPortal/clinics/*';
+    this.responseClinicsTopic = 'response/clinicPortal/clinics/*';
   }
 
   connect() {
@@ -43,22 +40,30 @@ class MqttHandler {
     const client = this.mqttClient;
     // When a message arrives, console.log it
     this.mqttClient.on('message', async function (topic, message) {
-      switch (topic) {
-        case 'clinicPortal/dentist/request':
+
+       //-------------------------------------------------------------------\\
+      let incomingTopic = topic.split('/') // array of topic fields
+      id = s[3]  //   [request, creatBooking, id]
+      incomingTopic = s.splice(3,1) // removes id = [request, createBooking]
+      const finalTopic = s.join('/') // finalTopic = request/creatBooking 
+       //--------------------------------------------------------------------\\
+
+      switch (finalTopic) {
+        case 'request/clinicPortal/dentist':
           const responseDentist = await clinic.getDentist(message.toString());
-          client.publish('clinicPortal/dentist/response', responseDentist);
+          client.publish(`response/clinicPortal/dentist/${id}`, responseDentist);
           console.log(responseDentist);
           break;
         
-        case 'clinicPortal/clinic/request':
+        case 'request/clinicPortal/clinic':
           const responseClinic = await clinic.getClinic(message.toString());
-          client.publish('clinicPortal/clinic/response', responseClinic);
+          client.publish(`response/clinicPortal/clinic/${id}`, responseClinic);
           console.log(responseClinic);
           break;
 
-        case 'clinicPortal/clinics/request':
+        case 'request/clinicPortal/clinics':
           const responseClinics = await clinic.getClinics();
-          client.publish('clinicPortal/clinics/response', responseClinics);
+          client.publish(`response/clinicPortal/clinics/${id}`, responseClinics);
           console.log(responseClinics);
           break;
       }
