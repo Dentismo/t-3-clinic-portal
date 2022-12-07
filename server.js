@@ -5,13 +5,14 @@ const path = require('path');
 const cors = require('cors');
 const history = require('connect-history-api-fallback');
 const dentist = require('./controller/clinicPortalController');
+require('dotenv').config();
 
 
 
 var bodyParser = require("body-parser");
 var mqttHandler = require('./controller/mqtt-handler');
 
-const mongoURI = 'mongodb://127.0.0.1:27017/dentistClinicDB';
+const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3009;
 
 connectToDatabase(mongoURI);
