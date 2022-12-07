@@ -27,25 +27,6 @@ class ClinicPortalController {
         
     }
 
-    // Returns the list of bookings for the specific clinic
-    async getBookings(clinic_id) {
-        try {
-            if (!mongoose.Types.ObjectId.isValid(clinic_id) || clinic_id === null) 
-                return {message: 'ID is not valid for given request'};
-
-            const dentistsBookings = await Booking.find({clinicId: clinic_id});
-            
-            if (!dentistsBookings)
-                return {message: 'Bookings could not be found'};
-
-            return dentistsBookings.toString();    
-
-        } catch (error) {
-            console.log(error);
-            return {message: 'Bookings could not be found'};
-        }
-    }
-
     // Returns the specific clinic's information
     async getClinic(id) {
         try {
