@@ -9,12 +9,12 @@ class MqttHandler {
     this.host = 'http://localhost:1883';
     this.username = 'YOUR_USER'; // mqtt credentials if these are needed to connect
     this.password = 'YOUR_PASSWORD';
-    this.reqestDentistTopic = 'request/clinicPortal/dentist/*';
-    this.responseDentistTopic = 'response/clinicPortal/dentist/*';
-    this.reqestClinicTopic = 'request/clinicPortal/clinic/*';
-    this.responseClinicTopic = 'response/clinicPortal/clinic/*';
-    this.reqestClinicsTopic = 'request/clinicPortal/clinics/*';
-    this.responseClinicsTopic = 'response/clinicPortal/clinics/*';
+    this.reqestDentistTopic = 'request/clinicPortal/dentist/#';
+    this.responseDentistTopic = 'response/clinicPortal/dentist/#';
+    this.reqestClinicTopic = 'request/clinicPortal/clinic/#';
+    this.responseClinicTopic = 'response/clinicPortal/clinic/#';
+    this.reqestClinicsTopic = 'request/clinicPortal/clinics/#';
+    this.responseClinicsTopic = 'response/clinicPortal/clinics/#';
   }
 
   connect() {
