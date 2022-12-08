@@ -5,13 +5,14 @@ const path = require('path');
 const cors = require('cors');
 const history = require('connect-history-api-fallback');
 const dentist = require('./controller/clinicPortalController');
+require('dotenv').config()
 
 
 
 var bodyParser = require("body-parser");
 var mqttHandler = require('./controller/mqtt-handler');
 
-const mongoURI = 'mongodb://127.0.0.1:27017/dentistClinicDB';
+const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dentistClinicDB';
 const port = process.env.PORT || 3009;
 
 connectToDatabase(mongoURI);
@@ -64,9 +65,8 @@ function addRoutesToApp(app) {
         res.json({ 'message': 'Welcome to your Distributed Systems Baby' });
     });
 
-    /**
-     * Add controllers here
-     */
+    var ClinicPortalController = require("./controller/controller.js");
+    app.use("/api/clinicPortal", ClinicPortalController);
 
     // Catch all non-error handler for api (i.e., 404 Not Found)
     app.use('/api/*', function (req, res) {
@@ -108,9 +108,3 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 var mqttClient = new mqttHandler();
 mqttClient.connect();
-
-// Routes
-app.post("/send-mqtt", function(req, res) {
-  mqttClient.sendMessage(req.body.message);
-  res.status(200).send("Message sent to mqtt");
-});

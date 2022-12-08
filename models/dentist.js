@@ -34,6 +34,4 @@ const dentistSchema = new mongoose.Schema({
     }
 });
 
-const Dentist = mongoose.model('Dentist', dentistSchema);
-
-module.exports.Dentist = Dentist;
+module.exports = mongoose.model('dentists', dentistSchema);

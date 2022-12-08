@@ -1,6 +1,4 @@
 const mongoose = require("mongoose")
-const {dentistSchema} = require('./dentist');
-
 
 const clinicSchema = new mongoose.Schema({
     name: {
@@ -38,7 +36,7 @@ const clinicSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            finish: {
+            end: {
                 type: Number,
                 required: true
             }
@@ -48,7 +46,7 @@ const clinicSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            finish: {
+            end: {
                 type: Number,
                 required: true
             }
@@ -58,7 +56,7 @@ const clinicSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            finish: {
+            end: {
                 type: Number,
                 required: true
             }
@@ -68,7 +66,7 @@ const clinicSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            finish: {
+            end: {
                 type: Number,
                 required: true
             }
@@ -78,7 +76,7 @@ const clinicSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            finish: {
+            end: {
                 type: Number,
                 required: true
             }
@@ -86,4 +84,4 @@ const clinicSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Clinic', clinicSchema)
+module.exports = mongoose.model('clinics', clinicSchema)
