@@ -7,8 +7,6 @@ const history = require('connect-history-api-fallback');
 const dentist = require('./controller/clinicPortalController');
 require('dotenv').config()
 
-
-
 var bodyParser = require("body-parser");
 var mqttHandler = require('./controller/mqtt-handler');
 
@@ -64,9 +62,6 @@ function addRoutesToApp(app) {
     app.get('/api', function (req, res) {
         res.json({ 'message': 'Welcome to your Distributed Systems Baby' });
     });
-
-    var ClinicPortalController = require("./controller/controller.js");
-    app.use("/api/clinicPortal", ClinicPortalController);
 
     // Catch all non-error handler for api (i.e., 404 Not Found)
     app.use('/api/*', function (req, res) {
