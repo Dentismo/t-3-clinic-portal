@@ -1,20 +1,21 @@
-const mqtt = require('mqtt');
-const ClinicPortalController = require('./clinicPortalController')
+const mqtt = require("mqtt");
+const ClinicPortalController = require("./clinicPortalController")
 
 const clinic = new ClinicPortalController();
 
 class MqttHandler {
   constructor() {
     this.mqttClient = null;
-    this.host = 'http://localhost:1883';
-    this.username = 'YOUR_USER'; // mqtt credentials if these are needed to connect
-    this.password = 'YOUR_PASSWORD';
-    this.reqestDentistTopic = 'request/clinicPortal/dentist/+';
-    this.responseDentistTopic = 'response/clinicPortal/dentist/+';
-    this.reqestClinicTopic = 'request/clinicPortal/clinic/+';
-    this.responseClinicTopic = 'response/clinicPortal/clinic/+';
-    this.reqestClinicsTopic = 'request/clinicPortal/clinics/+';
-    this.responseClinicsTopic = 'response/clinicPortal/clinics/+';
+    this.host = "http://localhost:1883";
+    this.username = "YOUR_USER"; // mqtt credentials if these are needed to connect
+    this.password = "YOUR_PASSWORD";
+
+    this.requestDentistTopic = "request/dentist/#";
+    this.responseDentistTopic = "response/dentist/#";
+    this.requestClinicTopic = "request/clinic/#";
+    this.responseClinicTopic = "response/clinic/#";
+    this.requestClinicsTopic = "request/clinics/#";
+    this.responseClinicsTopic = "response/clinics/#";
   }
 
   connect() {
@@ -22,54 +23,56 @@ class MqttHandler {
     this.mqttClient = mqtt.connect(this.host, { username: this.username, password: this.password });
 
     // Mqtt error calback
-    this.mqttClient.on('error', (err) => {
+    this.mqttClient.on("error", (err) => {
       console.log(err);
       this.mqttClient.end();
     });
 
     // Connection callback
-    this.mqttClient.on('connect', () => {
-      console.log(`mqtt client connected, Subscribed to ${this.reqestDentistTopic}`);
-      console.log(`mqtt client connected, Subscribed to ${this.reqestClinicTopic}`);
-      console.log(`mqtt client connected, Subscribed to ${this.reqestClinicsTopic}`);
-      this.mqttClient.subscribe(this.reqestDentistTopic, {qos: 1});
-      this.mqttClient.subscribe(this.reqestClinicTopic, {qos: 1});
-      this.mqttClient.subscribe(this.reqestClinicsTopic, {qos: 1});
+    this.mqttClient.on("connect", () => {
+      console.log(`mqtt client connected, Subscribed to ${this.requestDentistTopic}\n`);
+      console.log(`mqtt client connected, Subscribed to ${this.requestClinicTopic}\n`);
+      console.log(`mqtt client connected, Subscribed to ${this.requestClinicsTopic}`);
+      this.mqttClient.subscribe(this.requestDentistTopic, {qos: 1});
+      this.mqttClient.subscribe(this.requestClinicTopic, {qos: 1});
+      this.mqttClient.subscribe(this.requestClinicsTopic, {qos: 1});
     });
 
+    
     const client = this.mqttClient;
     // When a message arrives, console.log it
-    this.mqttClient.on('message', async function (topic, message) {
+    this.mqttClient.on("message", async function (topic, message) {
 
        //-------------------------------------------------------------------\\
-      let incomingTopic = topic.split('/') // array of topic fields
-      id = s[3]  //   [request, clinicportal, clinic, id]
-      incomingTopic = s.splice(3,1) // removes id = [request, clinicportal, clinic]
-      const finalTopic = s.join('/') // finalTopic = request/clinicportal/clinic 
+      let incomingTopic = topic.split("/") // array of topic fields
+      const id = incomingTopic[2]  //   [request, clinicportal, clinic, id]
+      incomingTopic.splice(2,1) // removes id = [request, clinicportal, clinic]
+      const finalTopic = incomingTopic.join("/") // finalTopic = request/clinicportal/clinic 
        //--------------------------------------------------------------------\\
 
+       console.log(incomingTopic, message.toString())
+
       switch (finalTopic) {
-        case 'request/clinicPortal/dentist':
+        case "request/dentist":
           const responseDentist = await clinic.getDentist(message.toString());
-          client.publish(`response/clinicPortal/dentist/${id}`, responseDentist);
+          client.publish(`response/dentist/${id}`, responseDentist);
           console.log(responseDentist);
           break;
         
-        case 'request/clinicPortal/clinic':
-          const responseClinic = await clinic.getClinic(message.toString());
-          client.publish(`response/clinicPortal/clinic/${id}`, responseClinic);
+        case "request/clinic":
+          console.log(message.toString())
+          const responseClinic = await clinic.getClinic(JSON.parse(message.toString()));
+          client.publish(`response/clinic/${id}`, JSON.stringify(responseClinic));
           console.log(responseClinic);
           break;
 
-        case 'request/clinicPortal/clinics':
+        case "request/clinics":
           const responseClinics = await clinic.getClinics();
-          client.publish(`response/clinicPortal/clinics/${id}`, responseClinics);
+          client.publish(`response/clinics/${id}`, responseClinics);
           console.log(responseClinics);
           break;
       }
     });
   }
-
 }
-
 module.exports = MqttHandler;
