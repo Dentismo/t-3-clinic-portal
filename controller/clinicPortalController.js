@@ -1,6 +1,5 @@
-const {Dentist} = require('../model/dentist');
-const Booking = require('../model/booking');
-const Clinic = require('../model/clinic');
+const Dentist = require('../models/dentist.js');
+const Clinic = require('../models/clinic.js');
 const mongoose = require('mongoose');
 
 class ClinicPortalController {
@@ -28,17 +27,21 @@ class ClinicPortalController {
     }
 
     // Returns the specific clinic's information
-    async getClinic(id) {
+    async getClinic(messageBody) {
         try {
-            if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
+            const { _id } = messageBody
+
+            console.log(`\n ${_id} \n`)
+
+            if (!mongoose.Types.ObjectId.isValid(_id) || _id === null) 
                 return {message: 'ID is not valid for given request'};
 
-            const clinics = await Clinic.findById(id); 
+            const clinic = await Clinic.findById(_id); 
 
-            if (!clinics)
+            if (!clinic)
                 return {message: 'Clinic could not be found with given ID'};
 
-            return JSON.stringify(clinics);
+            return clinic;
 
         } catch (error) {
             console.log(error)
