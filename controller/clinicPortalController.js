@@ -7,7 +7,8 @@ class ClinicPortalController {
     constructor() {}
 
     // Returns the specific dentist
-    async getDentist(id) {
+    async getDentist(obj) {
+        const id = obj._id
         try {
             if (!mongoose.Types.ObjectId.isValid(id) || id === null) 
                 return {message: 'ID is not valid for given request'};

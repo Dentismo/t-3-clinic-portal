@@ -54,7 +54,7 @@ class MqttHandler {
 
       switch (finalTopic) {
         case "request/dentist":
-          const responseDentist = await clinic.getDentist(message.toString());
+          const responseDentist = await clinic.getDentist(JSON.parse(message.toString()));
           client.publish(`response/dentist/${id}`, responseDentist);
           console.log(responseDentist);
           break;
